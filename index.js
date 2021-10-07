@@ -2,7 +2,9 @@ const express = require('express');
 const mongoose = require('mongoose');
 
 mongoose
-   .connect('mongodb://localhost:27017/mapdata')
+   .connect(
+      'mongodb+srv://faiyaz:tncZi0cn9skkOnbJ@cluster0.peotm.mongodb.net/myFirstDatabase?retryWrites=true&w=majority'
+   )
    .then(() => console.log(`app is successfully connected to database`))
    .catch((error) => console.log(error));
 
@@ -23,26 +25,31 @@ const kmsToRadian = function (kms) {
 };
 
 const fetchCords = async function (data) {
-   const cords = await Coordinates.find({
-      location: {
-         $geoWithin: {
-            $centerSphere: [[data.coordinates[1], data.coordinates[0]], kmsToRadian(0.1)],
+   try {
+      const cords = await Coordinates.find({
+         location: {
+            $geoWithin: {
+               $centerSphere: [[data.coordinates[1], data.coordinates[0]], kmsToRadian(0.1)],
+            },
          },
-      },
-   }).select({ __v: 0 });
+      }).select({ __v: 0 });
 
-   return cords.map((cord) => {
-      return {
-         _id: cord._id,
-         latitude: cord.location.coordinates[0],
-         longitude: cord.location.coordinates[1],
-      };
-   });
+      return cords.map((cord) => {
+         return {
+            _id: cord._id,
+            name: cord.name,
+            latitude: cord.location.coordinates[0],
+            longitude: cord.location.coordinates[1],
+         };
+      });
+   } catch (error) {
+      console.log(error);
+   }
 };
 
 const geoJsonData = {
    type: 'Point',
-   coordinates: [-77.0145665, 38.8993487],
+   coordinates: [-77.0388276, 38.9024583],
 };
 
 fetchCords(geoJsonData).then((value) => {
