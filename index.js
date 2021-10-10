@@ -1,25 +1,15 @@
 //dependencies
 const mongoose = require('mongoose');
 
+//internal imports
+const Coordinates = require('./Coordinates');
+
 //* Database Connection
 //? by changing the mongodb connection string you can connect to your own database
 mongoose
-   .connect(
-      'mongodb+srv://faiyaz:tncZi0cn9skkOnbJ@cluster0.peotm.mongodb.net/myFirstDatabase?retryWrites=true&w=majority'
-   )
+   .connect('mongodb+srv://faiyaz:tncZi0cn9skkOnbJ@cluster0.peotm.mongodb.net/geoFencing?retryWrites=true&w=majority')
    .then(() => console.log(`app is successfully connected to database`))
    .catch((error) => console.log(error));
-
-//* Coordinates model and schema
-const cordsSchema = new mongoose.Schema({
-   name: { type: String, unique: true },
-   location: {
-      type: { type: String, default: 'Point' },
-      coordinates: [Number],
-   },
-});
-cordsSchema.index({ location: '2dsphere' });
-const Coordinates = mongoose.model('coordinate', cordsSchema);
 
 //* Function to convert kilometer to earth radian
 const kmsToRadian = function (kms) {
@@ -44,7 +34,6 @@ const fetchCords = async function (data) {
       return cords.map((cord) => {
          return {
             _id: cord._id,
-            name: cord.name,
             latitude: cord.location.coordinates[0],
             longitude: cord.location.coordinates[1],
          };

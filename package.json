@@ -4,11 +4,14 @@
    "description": "",
    "main": "index.js",
    "scripts": {
-      "start": "node index.js"
+      "start": "nodemon script.js"
    },
    "author": "",
    "license": "ISC",
    "dependencies": {
-      "mongoose": "^6.0.9"
+      "express": "^4.17.1",
+      "mongoose": "^6.0.9",
+      "on-change": "^4.0.0",
+      "socket.io": "^4.2.0"
    }
 }
